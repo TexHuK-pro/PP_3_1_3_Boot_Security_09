@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create user</title>
+</head>
+<body>
+    <form action="#" th:action="@{/admin-create}" th:object="${user}" method="post">
+        <label for="userName">First name</label>
+        <input type="text" th:field="*{userName}" id="userName" placeholder="Username"/>
+        <label for="email">Last name</label>
+        <input type="text" th:field="*{email}" id="email" placeholder="Email"/>
+        <label for="password">Password</label>
+        <input type="password" th:field="*{password}" id="password"/>
+        <hr/>
+        <label for="role-select">Select roles</label><br><br>
+        <select id="role-select" required class="form-control" th:field="*{roles}" multiple="multiple" >
+            <option th:each="role : ${users_roles}"
+                    th:field="*{roles}"
+                    th:value="${role.id}"
+                    th:text="${role.name}">Role name
+            </option>
+        </select>
+        <hr/>
+        <input type="submit" value="Create User">
+    </form>
+</body>
+</html>
