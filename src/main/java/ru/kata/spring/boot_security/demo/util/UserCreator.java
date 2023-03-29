@@ -26,11 +26,6 @@ public class UserCreator {
 
 
     public List<User> createUsersWithRoles() {
-        //roleRepository.save(new Role(1L, ROLE_USER));
-        //roleRepository.save(new Role(2L, ROLE_ADMIN));
-        //HashSet<Role> roles = new HashSet<>();
-        //roles.add(new Role(1L, ROLE_USER));
-        //roles.add(new Role(2L, ROLE_ADMIN));
         User user = new User("user", "user", "123@123", List.of(ROLE_USER));
         User admin = new User("admin", "admin", "321@21`", List.of(ROLE_ADMIN, ROLE_USER));
         return List.of(admin, user);

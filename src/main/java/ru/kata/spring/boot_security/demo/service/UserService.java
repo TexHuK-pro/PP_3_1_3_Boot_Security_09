@@ -8,18 +8,17 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements InterfaceUserService {
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
@@ -43,6 +42,7 @@ public class UserService implements UserDetailsService {
 
         return user;
     }
+
     public User findUserById(Long userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         return userFromDb.orElse(new User());
@@ -52,15 +52,9 @@ public class UserService implements UserDetailsService {
     public List<User> allUsers() {
         return userRepository.findAll();
     }
+
     @Transactional
     public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUserName(user.getUsername());
-        System.out.println("-----------------saveUser: "+user);
-        if (userFromDB != null) {
-            return false;
-        }
-
-
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;

@@ -11,13 +11,9 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
     @Id
-    //@Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    //@Transient
-    //@ManyToMany(mappedBy = "roles")
-    //private Set<User> users;
     public Role() {
     }
 
@@ -65,14 +61,5 @@ public class Role implements GrantedAuthority {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    //public Set<User> getUsers() {
-    //    return users;
-    //}
-
-    //public void setUsers(Set<User> users) {
-    //    this.users = users;
-    //}
-
 
 }

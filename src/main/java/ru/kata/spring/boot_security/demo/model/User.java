@@ -1,11 +1,11 @@
 package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username")
-    private String userName;
+    private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "email")
@@ -30,27 +30,13 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
-    //@ManyToMany(fetch = FetchType.EAGER)
-//    @ManyToMany(cascade = {CascadeType.MERGE})
-//    @JoinTable(
-//            name = "users_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Set<Role> roles;
-//    @ManyToMany( cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//    @JoinTable(
-//            name = "users_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
     public User() {
     }
 
-    public User(String userName, String password, String email,  Collection<String> roles) {
-        this.userName = userName;
+    public User(String username, String password, String email,  Collection<String> roles) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.roles = roles.stream().map(Role::new).collect(Collectors.toSet());
@@ -58,7 +44,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //return this.roles.stream().map(p -> new SimpleGrantedAuthority(p.getName())).collect(Collectors.toSet());
         return roles;
     }
 
@@ -69,7 +54,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -101,11 +86,11 @@ public class User implements UserDetails {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
     public void setPassword(String password) {
         this.password = password;
@@ -127,22 +112,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", userName='" + userName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                ", roles=" + roles +
-//                '}';
-//    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", userName='" + userName + '\'' +
+                ", userName='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
