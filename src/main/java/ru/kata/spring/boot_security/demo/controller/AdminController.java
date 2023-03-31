@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/")
 public class AdminController {
     private final UserService userService;
-
     public AdminController(UserService userService) {
         this.userService = userService;
     }
@@ -26,10 +25,9 @@ public class AdminController {
         return "admin/admin-list";
     }
 
-
     @GetMapping("admin-create")
     public String createUserForm(Model model) {
-        model.addAttribute("user", new User() );
+        model.addAttribute("user", new User());
         model.addAttribute("users_roles", userService.getRoles());
         return "admin/admin-create";
     }
@@ -55,13 +53,4 @@ public class AdminController {
         model.addAttribute("roleList", userService.getRoles());
         return "/admin/admin-update";
     }
-
-    @PostMapping("admin-update")
-    public String updateUser(@ModelAttribute("update") User user) {
-        user.setRoles(user.getRoles());
-        System.out.println("Post user-update " + user);
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
-
 }
