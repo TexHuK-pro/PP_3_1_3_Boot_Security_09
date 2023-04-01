@@ -25,8 +25,6 @@ public class UserService implements InterfaceUserService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private User userPass;
-
     public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -56,9 +54,9 @@ public class UserService implements InterfaceUserService {
 
     @Transactional
     public boolean saveUser(User user) {
-        userPass = userRepository.findByUserName(user.getUserName());
-        if (user.getPassword() == "") {
-            user.setPassword(userPass.getPassword());
+        Optional<User> userPass = userRepository.findById(user.getId());
+        if (user.getPassword().isEmpty()) {
+            user.setPassword(userPass.get().getPassword());
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }

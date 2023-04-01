@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
@@ -13,8 +14,11 @@ import java.util.List;
 @RequestMapping("/")
 public class AdminController {
     private final UserService userService;
-    public AdminController(UserService userService) {
+    private final UserRepository userRepository;
+
+    public AdminController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("admin")
@@ -34,7 +38,20 @@ public class AdminController {
 
     @PostMapping("admin-create")
     public String createUser(User user) {
-        user.setRoles(user.getRoles());
+        if (user.getRoles().isEmpty()) {
+            user.setRoles(userService.findUserById(user.getId()).getRoles());
+        } else {
+            user.setRoles(user.getRoles());
+        }
+        if (userRepository.findByUserName(user.getUsername()) != null && user.getId() == null) {
+            return "redirect:/admin";
+        }
+        if (user.getId() == null && user.getPassword().isEmpty()) {
+            return "redirect:/admin";
+        }
+        if (user.getUsername().isEmpty()) {
+            return "redirect:/admin";
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
