@@ -38,11 +38,6 @@ public class AdminController {
 
     @PostMapping("admin-create")
     public String createUser(User user) {
-        if (user.getRoles().isEmpty()) {
-            user.setRoles(userService.findUserById(user.getId()).getRoles());
-        } else {
-            user.setRoles(user.getRoles());
-        }
         userService.saveUser(user);
         return "redirect:/admin";
     }

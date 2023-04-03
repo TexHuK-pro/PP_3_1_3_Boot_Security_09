@@ -31,6 +31,13 @@ public class UserService implements InterfaceUserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    //Временный метод для автоматического создания пользователей
+    public boolean utilSaveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -54,30 +61,35 @@ public class UserService implements InterfaceUserService {
     public boolean saveUser(User user) {
         Optional<User> userPass = userRepository.findById(user.getId());
 
+        // проверка обязательной роли
+        if (user.getRoles().isEmpty()) {
+            user.setRoles(findUserById(user.getId()).getRoles());
+        } else {
+            user.setRoles(user.getRoles());
+        }
+
+        // проверка на наличие пользователя в бд
         if (userRepository.findByUserName(user.getUsername()) != null && user.getId() == null) {
             return false;
         }
 
+        // проверка на наличие пороля при создание нового пользователя
         if (user.getId() == null && user.getPassword().isEmpty()) {
             return false;
         }
 
-        if(user.getUsername().isEmpty()){
+        // проверка на наличие имени при создании и редактирование
+        if (user.getUsername().isEmpty()) {
             return false;
         }
 
+        // проверка, если не вводили новый пароль, то оставляем старый
         if (user.getPassword().isEmpty()) {
             user.setPassword(userPass.get().getPassword());
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(user);
-        return true;
-    }
 
-    //Временный метод для временных пользователей
-    public boolean utilSaveUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
