@@ -14,11 +14,9 @@ import java.util.List;
 @RequestMapping("/")
 public class AdminController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
-    public AdminController(UserService userService, UserRepository userRepository) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("admin")
