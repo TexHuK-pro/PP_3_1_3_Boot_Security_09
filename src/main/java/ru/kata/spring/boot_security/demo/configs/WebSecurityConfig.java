@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @PostConstruct
     private void createUsers() {
-        userCreator.createUsersWithRoles().forEach(userService::saveUser);
+        userCreator.createUsersWithRoles().forEach(userService::utilSaveUser);
     }
 
 }

@@ -20,9 +20,9 @@
     <br/>
     <label for="roles">Select roles: </label>
     <th:block th:each="role : ${roleList}">
-        <input id="roles" type="checkbox" th:field="*{roles}"
+        <input id="roles" type="checkbox" th:field="*{roles} "
                th:value="${role.id}"
-               th:text="${role.name}" />
+               th:text="${role.name}" multiple="multiple"/>
     </th:block>
     <br/>
     <input type="submit" value="Update User">

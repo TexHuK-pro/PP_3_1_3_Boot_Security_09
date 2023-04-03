@@ -35,11 +35,9 @@ public class UserService implements InterfaceUserService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username);
-
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-
         return user;
     }
 
@@ -55,11 +53,31 @@ public class UserService implements InterfaceUserService {
     @Transactional
     public boolean saveUser(User user) {
         Optional<User> userPass = userRepository.findById(user.getId());
+
+        if (userRepository.findByUserName(user.getUsername()) != null && user.getId() == null) {
+            return false;
+        }
+
+        if (user.getId() == null && user.getPassword().isEmpty()) {
+            return false;
+        }
+
+        if(user.getUsername().isEmpty()){
+            return false;
+        }
+
         if (user.getPassword().isEmpty()) {
             user.setPassword(userPass.get().getPassword());
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
+        userRepository.save(user);
+        return true;
+    }
+
+    //Временный метод для временных пользователей
+    public boolean utilSaveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }

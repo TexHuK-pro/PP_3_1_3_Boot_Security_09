@@ -43,15 +43,6 @@ public class AdminController {
         } else {
             user.setRoles(user.getRoles());
         }
-        if (userRepository.findByUserName(user.getUsername()) != null && user.getId() == null) {
-            return "redirect:/admin";
-        }
-        if (user.getId() == null && user.getPassword().isEmpty()) {
-            return "redirect:/admin";
-        }
-        if (user.getUsername().isEmpty()) {
-            return "redirect:/admin";
-        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
